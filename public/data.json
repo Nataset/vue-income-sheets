@@ -1,0 +1,160 @@
+[
+    {
+        "type": "income",
+        "date": "2021-01-10",
+        "describe": "Creative makeup describtion",
+        "amount": "1500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-01-01",
+        "describe": "Creative makeup describtion",
+        "amount": "2000"
+    },
+    {
+        "type": "income",
+        "date": "2021-02-11",
+        "describe": "Creative makeup describtion",
+        "amount": "500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-02-11",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "income",
+        "date": "2021-03-11",
+        "describe": "Creative makeup describtion",
+        "amount": "4000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-03-11",
+        "describe": "Creative makeup describtion",
+        "amount": "5000"
+    },
+    {
+        "type": "income",
+        "date": "2021-04-11",
+        "describe": "Creative makeup describtion",
+        "amount": "3000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-04-10",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "income",
+        "date": "2021-05-11",
+        "describe": "Creative makeup describtion",
+        "amount": "5000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-05-10",
+        "describe": "Creative makeup describtion",
+        "amount": "3000"
+    },
+    {
+        "type": "income",
+        "date": "2021-06-11",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-06-10",
+        "describe": "Creative makeup describtion",
+        "amount": "3000"
+    },
+    {
+        "type": "income",
+        "date": "2021-07-11",
+        "describe": "Creative makeup describtion",
+        "amount": "4000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-07-10",
+        "describe": "Creative makeup describtion",
+        "amount": "3500"
+    },
+
+    {
+        "type": "income",
+        "date": "2021-08-11",
+        "describe": "Creative makeup describtion",
+        "amount": "500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-08-10",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "income",
+        "date": "2021-09-11",
+        "describe": "Creative makeup describtion",
+        "amount": "1500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-09-10",
+        "describe": "Creative makeup describtion",
+        "amount": "3000"
+    },
+    {
+        "type": "income",
+        "date": "2021-10-11",
+        "describe": "Creative makeup describtion",
+        "amount": "2500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-10-10",
+        "describe": "Creative makeup describtion",
+        "amount": "200"
+    },
+
+    {
+        "type": "income",
+        "date": "2021-11-11",
+        "describe": "Creative makeup describtion",
+        "amount": "3000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-11-10",
+        "describe": "Creative makeup describtion",
+        "amount": "5000"
+    },
+    {
+        "type": "income",
+        "date": "2021-12-11",
+        "describe": "Creative makeup describtion",
+        "amount": "4500"
+    },
+    {
+        "type": "expense",
+        "date": "2021-12-3",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "income",
+        "date": "2021-07-25",
+        "describe": "Creative makeup describtion",
+        "amount": "1000"
+    },
+    {
+        "type": "expense",
+        "date": "2021-07-10",
+        "describe": "Creative makeup describtion",
+        "amount": "2400"
+    }
+]
