@@ -1,24 +1,26 @@
 # income-sheet
 
-## Project setup
+## how to start a project
+
 ```
 yarn install
+
 ```
 
-### Compiles and hot-reloads for development
+or
+
+```
+npm install
+```
+
+## then
+
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+or
 
-### Lints and fixes files
 ```
-yarn lint
+npm run serve
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

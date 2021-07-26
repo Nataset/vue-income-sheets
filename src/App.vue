@@ -140,7 +140,8 @@
             </div>
             <div style="text-align: center">
               <label style="font-size: 14px; font-weight: bold">
-                Total |
+                Balance: {{ totalIncome > totalExpense ? "+" : "-"
+                }}{{ totalIncome - totalExpense }} |
                 <label style="font-weight: normal"
                   >Expense:
                   <label style="color: red">{{ totalExpense }}</label>
@@ -292,7 +293,7 @@ export default {
       this.newData.date = moment(this.newData.date).format("YYYY-MM-DD");
       const newPushData = JSON.parse(JSON.stringify(this.newData));
       this.info.push(newPushData);
-      this.updateChart();
+      console.log(this.newData);
     },
 
     setChartData() {
