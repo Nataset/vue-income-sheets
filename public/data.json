@@ -6,6 +6,12 @@
         "amount": "1500"
     },
     {
+        "type": "income",
+        "date": "2020-01-10",
+        "describe": "Creative makeup describtion",
+        "amount": "1500"
+    },
+    {
         "type": "expense",
         "date": "2021-01-01",
         "describe": "Creative makeup describtion",

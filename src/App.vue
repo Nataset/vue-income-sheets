@@ -1,29 +1,56 @@
 <template>
   <div id="app">
     <line-chart class="container" :chartData="datacollection"></line-chart>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <label for="customRange3" class="form-label">Example range</label>
-          <input type="range" class="form-range" min="0" max="5" step="0.5" />
+    <div
+      class="
+        container
+        mt-3
+        border border-1 border-secondary
+        rounded-3
+        p-3
+        ps-5
+        pe-5
+      "
+    >
+      <div class="row align-items-center">
+        <div class="col pe-5">
+          <label class="form-label"
+            >Start : {{ month[chartMonthStart - 1] }}</label
+          >
+          <input
+            type="range"
+            class="form-range"
+            min="1"
+            v-model="chartMonthStart"
+            v-bind:max="chartMonthEnd"
+            step="1"
+          />
         </div>
-        <div class="col">
-          <label for="customRange3" class="form-label">Example range</label>
-          <input type="range" class="form-range" min="0" max="5" step="1" />
+        <div class="col ps-5">
+          <label class="form-label">End : {{ month[chartMonthEnd - 1] }}</label>
+          <input
+            type="range"
+            class="form-range"
+            v-bind:min="chartMonthStart"
+            v-model="chartMonthEnd"
+            max="12"
+            step="1"
+          />
         </div>
-        <div class="col">
+        <div class="col ps-5 align-self-center">
+          <label>Select Year :&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <div class="dropdown d-inline">
             <button
               class="btn btn-outline-primary dropdown-toggle"
               type="button"
               data-bs-toggle="dropdown"
             >
-              {{ isIncome ? "Income" : "Expenses" }}
+              {{ chartYear }}
             </button>
             <ul class="dropdown-menu">
-              <li>
-                <button class="dropdown-item" v-on:click="isIncome = !isIncome">
-                  {{ isIncome ? "Expenses" : "Income" }}
+              <li v-for="(year, index) in allChartYear" v-bind:key="index">
+                <button class="dropdown-item" v-on:click="chartYear = year">
+                  {{ year }}
                 </button>
               </li>
             </ul>
@@ -31,20 +58,20 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="row mx-auto">
+    <div class="container mt-5">
+      <div class="row mx-auto align-items-center">
         <iframe
           width="560"
           height="315"
           src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&enablejsapi=1"
-          class="col mt-5"
+          class="col"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
         <div class="col">
-          <div class="mt-5">
+          <div class="">
             Current Time : {{ timeNow ? timeNow : "Loading... Current Time" }}
           </div>
           <div
@@ -111,26 +138,25 @@
                 Cancel
               </button>
             </div>
+            <div style="text-align: center">
+              <label style="font-size: 14px; font-weight: bold">
+                Total |
+                <label style="font-weight: normal"
+                  >Expense:
+                  <label style="color: red">{{ totalExpense }}</label>
+                </label>
+                <label style="font-weight: normal"
+                  >, Income:
+                  <label style="color: green">{{ totalIncome }}</label>
+                </label>
+              </label>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="container mt-5">
-      <div class="row align-items-center">
-        <div class="col">
-          <h4>
-            Total Income : <label style="color: green">{{ totalIncome }}</label>
-          </h4>
-        </div>
-        <div class="col">
-          <h4>
-            Total Expense :
-            <label style="color: red">{{ totalExpense }}</label>
-          </h4>
-        </div>
-      </div>
-    </div>
-    <div class="container mt-1 mb-5">
+
+    <div class="container mt-5 mb-5">
       <table
         class="
           table table-striped table-bordered table-hover
@@ -195,6 +221,7 @@ export default {
       chartIncome: 0,
       chartExpense: 0,
       chartYear: 2021,
+      allChartYear: new Set(),
       chartMonthStart: 1,
       chartMonthEnd: 12,
       newData: {
@@ -210,6 +237,20 @@ export default {
       gradient: null,
       gradient2: null,
       datacollection: null,
+      month: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
     };
   },
   components: { DatePicker, LineChart },
@@ -218,6 +259,17 @@ export default {
     setInterval(function () {
       self.timeNow = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
     }, 1000);
+  },
+  watch: {
+    chartMonthStart: function () {
+      this.updateChart();
+    },
+    chartMonthEnd: function () {
+      this.updateChart();
+    },
+    chartYear: function () {
+      this.updateChart();
+    },
   },
   methods: {
     sortDate(date) {
@@ -238,18 +290,22 @@ export default {
     add() {
       this.newData.type = this.isIncome ? "income" : "expense";
       this.newData.date = moment(this.newData.date).format("YYYY-MM-DD");
-      const newPushData = this.newData;
+      const newPushData = JSON.parse(JSON.stringify(this.newData));
       this.info.push(newPushData);
-      this.updateData();
+      this.updateChart();
     },
 
     setChartData() {
       this.chartIncome = 0;
       this.chartExpense = 0;
+      this.chartData.expense = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      this.chartData.income = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
       this.info.forEach((el) => {
         const time = moment(el.date);
         const month = time.format("M");
         const year = time.format("YYYY");
+        this.allChartYear.add(year);
 
         if (year == this.chartYear) {
           if (el.type === "income") {
@@ -266,23 +322,15 @@ export default {
     updateChart() {
       this.setChartData();
       this.datacollection = {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ].slice(this.chartMonthStart - 1, this.chartMonthEnd),
+        labels: this.month.slice(this.chartMonthStart - 1, this.chartMonthEnd),
         datasets: [
           {
-            label: "Total Income: " + this.chartIncome + " baht.",
+            label:
+              "Total Income " +
+              this.chartYear +
+              ": " +
+              this.chartIncome +
+              " baht.",
             borderColor: "#05CBE1",
             pointBackgroundColor: "green",
             pointBorderColor: "green",
@@ -291,7 +339,12 @@ export default {
             data: this.chartData.income,
           },
           {
-            label: "Total Expense: " + this.chartExpense + " baht.",
+            label:
+              "Total Expense " +
+              this.chartYear +
+              ": " +
+              this.chartExpense +
+              " baht.",
             borderColor: "#FC2525",
             pointBackgroundColor: "red",
             borderWidth: 1,
