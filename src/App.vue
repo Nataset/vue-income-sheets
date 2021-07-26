@@ -1,7 +1,36 @@
 <template>
   <div id="app">
-    <canvas style="display: none" ref="test"></canvas>
     <line-chart class="container" :chartData="datacollection"></line-chart>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <label for="customRange3" class="form-label">Example range</label>
+          <input type="range" class="form-range" min="0" max="5" step="0.5" />
+        </div>
+        <div class="col">
+          <label for="customRange3" class="form-label">Example range</label>
+          <input type="range" class="form-range" min="0" max="5" step="1" />
+        </div>
+        <div class="col">
+          <div class="dropdown d-inline">
+            <button
+              class="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              {{ isIncome ? "Income" : "Expenses" }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="dropdown-item" v-on:click="isIncome = !isIncome">
+                  {{ isIncome ? "Expenses" : "Income" }}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container">
       <div class="row mx-auto">
         <iframe
@@ -86,7 +115,22 @@
         </div>
       </div>
     </div>
-    <div class="container mt-5 mb-5">
+    <div class="container mt-5">
+      <div class="row align-items-center">
+        <div class="col">
+          <h4>
+            Total Income : <label style="color: green">{{ totalIncome }}</label>
+          </h4>
+        </div>
+        <div class="col">
+          <h4>
+            Total Expense :
+            <label style="color: red">{{ totalExpense }}</label>
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-1 mb-5">
       <table
         class="
           table table-striped table-bordered table-hover
@@ -146,6 +190,13 @@ export default {
       info: null,
       timeNow: null,
       isIncome: null,
+      totalIncome: 0,
+      totalExpense: 0,
+      chartIncome: 0,
+      chartExpense: 0,
+      chartYear: 2021,
+      chartMonthStart: 1,
+      chartMonthEnd: 12,
       newData: {
         type: "",
         date: "",
@@ -161,17 +212,14 @@ export default {
       datacollection: null,
     };
   },
+  components: { DatePicker, LineChart },
   created: function () {
     let self = this;
     setInterval(function () {
       self.timeNow = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
     }, 1000);
   },
-  components: { DatePicker, LineChart },
   methods: {
-    moment() {
-      return moment();
-    },
     sortDate(date) {
       const sortDate = date.sort((a, b) => {
         return moment.utc(b.date).diff(moment.utc(a.date));
@@ -192,31 +240,31 @@ export default {
       this.newData.date = moment(this.newData.date).format("YYYY-MM-DD");
       const newPushData = this.newData;
       this.info.push(newPushData);
-      this.setChartData();
-      this.updateChart();
-      this.cancle();
+      this.updateData();
     },
 
     setChartData() {
+      this.chartIncome = 0;
+      this.chartExpense = 0;
       this.info.forEach((el) => {
         const time = moment(el.date);
         const month = time.format("M");
         const year = time.format("YYYY");
-        console.log(parseInt(month), parseInt(el.amount));
-        if (year == 2021) {
-          el.type === "income"
-            ? (this.chartData.income[parseInt(month) - 1] += parseInt(
-                el.amount
-              ))
-            : (this.chartData.expense[parseInt(month) - 1] += parseInt(
-                el.amount
-              ));
+
+        if (year == this.chartYear) {
+          if (el.type === "income") {
+            this.chartData.income[parseInt(month) - 1] += parseInt(el.amount);
+            this.chartIncome += parseInt(el.amount);
+          } else {
+            this.chartData.expense[parseInt(month) - 1] += parseInt(el.amount);
+            this.chartExpense += parseInt(el.amount);
+          }
         }
       });
     },
 
     updateChart() {
-      console.log();
+      this.setChartData();
       this.datacollection = {
         labels: [
           "January",
@@ -231,25 +279,25 @@ export default {
           "October",
           "November",
           "December",
-        ],
+        ].slice(this.chartMonthStart - 1, this.chartMonthEnd),
         datasets: [
           {
-            label: "Expense",
-            borderColor: "#FC2525",
-            pointBackgroundColor: "red",
-            borderWidth: 1,
-            pointBorderColor: "red",
-            backgroundColor: this.gradient,
-            data: this.chartData.expense,
-          },
-          {
-            label: "Income",
+            label: "Total Income: " + this.chartIncome + " baht.",
             borderColor: "#05CBE1",
             pointBackgroundColor: "green",
             pointBorderColor: "green",
             borderWidth: 1,
             backgroundColor: this.gradient2,
             data: this.chartData.income,
+          },
+          {
+            label: "Total Expense: " + this.chartExpense + " baht.",
+            borderColor: "#FC2525",
+            pointBackgroundColor: "red",
+            borderWidth: 1,
+            pointBorderColor: "red",
+            backgroundColor: this.gradient,
+            data: this.chartData.expense,
           },
         ],
       };
@@ -273,6 +321,21 @@ export default {
       this.gradient2.addColorStop(0.5, "rgba(0, 255, 0, 0.25)");
       this.gradient2.addColorStop(1, "rgba(0, 255, 0, 0)");
     },
+
+    findTotal() {
+      this.info.forEach((el) => {
+        el.type === "income"
+          ? (this.totalIncome += parseInt(el.amount))
+          : (this.totalExpense += parseInt(el.amount));
+      });
+    },
+
+    updateData() {
+      this.info = this.sortDate(this.info);
+      this.findTotal();
+      this.updateChart();
+      this.cancle();
+    },
   },
 
   mounted() {
@@ -281,7 +344,7 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.info = this.sortDate(data);
-        this.setChartData();
+        this.findTotal();
         this.updateChart();
       });
   },
